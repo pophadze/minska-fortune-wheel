@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FC } from "react";
+import { useState, useEffect, FC } from "react";
 import { ArrowDown, Sparkles } from "lucide-react";
 import { Prize, fetchPrizeData } from "../../utils/fetchPrizes";
 import { initializeApp } from "firebase/app";
@@ -37,14 +37,7 @@ const FortuneWheel: FC<FortuneWheelProps> = ({ onSpinComplete }) => {
   const [isSliding, setIsSliding] = useState<boolean>(false); // Track if the slider is being dragged
   const navigate = useNavigate(); // Hook for navigation
 
-  // Block page scrolling on mobile
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, []);
-
+  
   useEffect(() => {
     const loadPrizes = async () => {
       try {
@@ -70,14 +63,14 @@ const FortuneWheel: FC<FortuneWheelProps> = ({ onSpinComplete }) => {
   const selectPrizeByChance = (prizes: Prize[]): Prize => {
     const random = Math.random() * 100; // Random number between 0 and 100
     let sum = 0;
-    
+
     for (const prize of prizes) {
       sum += prize.chance || 0; // Add the chance, defaulting to 0 if undefined
       if (random <= sum) {
         return prize;
       }
     }
-    
+
     return prizes[prizes.length - 1]; // Fallback to last prize
   };
 
@@ -102,11 +95,12 @@ const FortuneWheel: FC<FortuneWheelProps> = ({ onSpinComplete }) => {
     }
   };
 
-  const handleGoBack = () => {
-    navigate("/"); // Navigate to the home page
+  const handleGoBack = async () => {
+    navigate("/");
   };
 
   const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    console.log(event);
     setSliderValue(newValue as number);
     setIsSliding(true); // Start sliding
   };
@@ -127,13 +121,13 @@ const FortuneWheel: FC<FortuneWheelProps> = ({ onSpinComplete }) => {
     if (isSpinning || isLoading || error || prizes.length === 0) return;
 
     setIsSpinning(true);
-    
+
     // Select the winning prize based on chances
     const selectedPrize = selectPrizeByChance(prizes);
-    
+
     // Find the index of the selected prize
-    const prizeIndex = prizes.findIndex(p => p === selectedPrize);
-    
+    const prizeIndex = prizes.findIndex((p) => p === selectedPrize);
+
     // Calculate the rotation to land on the selected prize
     const spins = 5;
     const sectionSize = 360 / prizes.length;
@@ -151,7 +145,6 @@ const FortuneWheel: FC<FortuneWheelProps> = ({ onSpinComplete }) => {
       setSliderValue(0);
     }, 5000);
   };
-
 
   const getWheelSections = () => {
     if (prizes.length === 0) return null;
@@ -206,7 +199,7 @@ const FortuneWheel: FC<FortuneWheelProps> = ({ onSpinComplete }) => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="text-xl font-semibold text-gray-600 animate-pulse">
           Loading prizes...
         </div>
@@ -216,14 +209,14 @@ const FortuneWheel: FC<FortuneWheelProps> = ({ onSpinComplete }) => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="text-xl font-semibold text-red-600">{error}</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-blue-100 to-purple-100 p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-b from-blue-100 to-purple-100">
       <Dialog
         open={showUsernameDialog}
         onClose={() => setShowUsernameDialog(false)}
@@ -232,7 +225,7 @@ const FortuneWheel: FC<FortuneWheelProps> = ({ onSpinComplete }) => {
           <DialogTitle>Введіть ваше ім'я</DialogTitle>
           <div className="space-y-4">
             <TextField
-              placeholder="Надя"
+              placeholder="Ім'я"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && handleUsernameSubmit()}
@@ -273,11 +266,7 @@ const FortuneWheel: FC<FortuneWheelProps> = ({ onSpinComplete }) => {
             <div className="py-4">
               <Sparkles className="w-16 h-24 mx-auto text-yellow-400 animate-bounce" />
             </div>
-            <Button
-              onClick={() => navigate("/")}
-              variant="contained"
-              fullWidth
-            >
+            <Button onClick={() => navigate("/")} variant="contained" fullWidth>
               Close
             </Button>
           </div>
@@ -286,9 +275,9 @@ const FortuneWheel: FC<FortuneWheelProps> = ({ onSpinComplete }) => {
       </Dialog>
 
       <div className="w-full max-w-md mx-auto">
-        <div className="relative aspect-square mb-8">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-            <div className="bg-white rounded-full p-3 shadow-lg">
+        <div className="relative mb-8 aspect-square">
+          <div className="absolute top-0 z-10 -translate-x-1/2 -translate-y-1/2 left-1/2">
+            <div className="p-3 bg-white rounded-full shadow-lg">
               <ArrowDown size={32} className="text-gray-800" />
             </div>
           </div>
@@ -329,7 +318,7 @@ const FortuneWheel: FC<FortuneWheelProps> = ({ onSpinComplete }) => {
                 },
               }}
             />
-            <div className="text-center mt-2 text-sm text-gray-600">
+            <div className="mt-2 text-sm text-center text-gray-600">
               Тягніть щоб крутити
             </div>
           </div>

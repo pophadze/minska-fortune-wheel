@@ -1,17 +1,25 @@
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { MNG_PASSWORD } from '../static-data/constants';
+import {
+  Alert,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { MNG_PASSWORD } from "../static-data/constants";
 
 const ApproveByPassword = (WrappedComponent: React.FC<any>) => {
   const WrappedWithAuthorization: React.FC<any> = (props) => {
     const navigate = useNavigate();
     const [isAuthorized, setIsAuthorized] = useState(false);
-    const [inputValue, setInputValue] = useState('');
+    const [inputValue, setInputValue] = useState("");
     const [isPasswordIncorrect, setIsPasswordIncorrect] = useState(false);
 
     const handleClose = () => {
-      navigate('/');
+      navigate("/");
     };
 
     const handleButtonClick = () => {
@@ -20,14 +28,16 @@ const ApproveByPassword = (WrappedComponent: React.FC<any>) => {
       } else {
         setIsPasswordIncorrect(true);
       }
-    }
+    };
 
     const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
       setInputValue(event.target.value);
-    }
+    };
 
-    const handleTextFieldKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
+    const handleTextFieldKeyPress = (
+      event: React.KeyboardEvent<HTMLInputElement>
+    ) => {
+      if (event.key === "Enter") {
         handleButtonClick();
       }
     };
@@ -51,7 +61,9 @@ const ApproveByPassword = (WrappedComponent: React.FC<any>) => {
                 onKeyDown={handleTextFieldKeyPress}
               />
             </DialogContent>
-            {isPasswordIncorrect && (<Alert severity="error">Невірний пароль</Alert>)}
+            {isPasswordIncorrect && (
+              <Alert severity="error">Невірний пароль</Alert>
+            )}
             <DialogActions>
               <Button onClick={handleClose} color="secondary">
                 Повернутись
@@ -66,7 +78,7 @@ const ApproveByPassword = (WrappedComponent: React.FC<any>) => {
     );
   };
 
-  return WrappedWithAuthorization; // Return the new component with added authorization functionality
+  return WrappedWithAuthorization;
 };
 
 export default ApproveByPassword;

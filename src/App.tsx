@@ -21,7 +21,7 @@ import { theme } from "./themes/theme";
 import FortuneWheel from "./pages/FortuneWheel/FortuneWheel";
 import "./App.css";
 import PrizeResults from "./PrizeResults/PrizeResults";
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
 
 function App() {
   return (
@@ -40,11 +40,30 @@ function App() {
           </Box>
 
           <AppBar
-            position="static"
+            position="sticky"
+            sx={{
+              bottom: 0, // Fix the AppBar to the bottom of the screen
+              left: 0,
+              right: 0,
+              borderRadius: "0",
+              zIndex: (theme) => theme.zIndex.drawer + 1, // Ensure it stays above other elements
+            }}
             component="footer"
-            sx={{ borderRadius: "0" }}
           >
-            <Toolbar sx={{ maxWidth: "400px", margin: "0 auto" }}>
+            <Toolbar
+              sx={{
+                maxWidth: "100%", // Changed from 400px to allow full width
+                margin: "0 auto",
+                overflowX: "auto", // Enable horizontal scrolling
+                flexWrap: "nowrap", // Prevent wrapping
+                "&::-webkit-scrollbar": {
+                  // Hide scrollbar for WebKit browsers
+                  display: "none",
+                },
+                msOverflowStyle: "none", // Hide scrollbar for IE/Edge
+                scrollbarWidth: "none", // Hide scrollbar for Firefox
+              }}
+            >
               {" "}
               {/* Center the Toolbar within the AppBar */}
               <Box display="flex" justifyContent="space-around" width="100%">

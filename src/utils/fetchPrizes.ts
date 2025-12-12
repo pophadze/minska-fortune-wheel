@@ -24,15 +24,14 @@ export const fetchPrizeData = async (
       const parsedTotal = parseInt(storedTotal, 10);
 
       if (parsedPrizes.length === parsedTotal) {
-        console.log("Using cached prize data");
+        console.log("Using cached prize data"); 
         return {
-          prizes: parsedPrizes,
+          prizes: parsedPrizes, 
           total: parsedTotal,
         };
-      }
+      }   
     }
 
-    // Fetch data from Google Sheets
     const response = await axios.get(
       `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/prizes!A2:C?key=${apiKey}`
     );
@@ -50,7 +49,7 @@ export const fetchPrizeData = async (
 
     // Get total count
     const total = prizes.length;
-
+ 
     // Cache the results
     localStorage.setItem("wheelPrizes", JSON.stringify(prizes));
     localStorage.setItem("prizesTotal", total.toString());
