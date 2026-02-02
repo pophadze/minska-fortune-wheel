@@ -4,6 +4,6 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/adonis-waste-tracker-v2/",
+  base: "/minska-fortune-wheel/",
   plugins: [react(), tailwindcss()],
 });

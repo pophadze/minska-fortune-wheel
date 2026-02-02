@@ -38,8 +38,8 @@ const Settings: React.FC = () => {
         GOOGLE_API_KEY
       );
       await fetchPrizeData(GOOGLE_SHEET_ID, GOOGLE_API_KEY);
-      setSuccessMessage("Продукти та зображення оновлено успішно");
-    } catch (error) {
+      setSuccessMessage("Призи успішно оновлено");
+    } catch {
       setErrorMessage("Помилка при оновленні продуктів та зображень");
     } finally {
       setLoading(false);
@@ -63,7 +63,7 @@ const Settings: React.FC = () => {
             {loading ? (
               <CircularProgress size={24} />
             ) : (
-              "Оновити продукти та зображення"
+              "Оновити призи"
             )}
           </Button>
           {successMessage && (

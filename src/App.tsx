@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route, NavLink } from "react-router-dom";
+import { HashRouter, Routes, Route, NavLink, Navigate } from "react-router-dom";
 import {
   AppBar,
   Box,
@@ -8,20 +8,14 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
-import DeleteIcon from "@mui/icons-material/Delete";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import CoffeeIcon from "@mui/icons-material/Coffee";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import HomePage from "./pages/HomePage/HomePage";
-import Clothing from "./pages/Closing/Closing";
 import Settings from "./pages/Settings/Settings";
-import Drinks from "./pages/Drinks/Drinks";
 import cn from "classnames";
 import { theme } from "./themes/theme";
 import FortuneWheel from "./pages/FortuneWheel/FortuneWheel";
 import "./App.css";
-import PrizeResults from "./PrizeResults/PrizeResults";
 import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
+import PrizeResults from "./pages/PrizeResults/PrizeResults";
 
 function App() {
   return (
@@ -30,11 +24,9 @@ function App() {
         <Box display="flex" flexDirection="column" minHeight="100vh">
           <Box flexGrow={1}>
             <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/complete" element={<Clothing />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/drinks" element={<Drinks />} />
+              <Route path="/" element={<Navigate to="/fortune-wheel" />} />
               <Route path="/fortune-wheel" element={<FortuneWheel />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="/prize-results" element={<PrizeResults />} />
             </Routes>
           </Box>
@@ -69,49 +61,6 @@ function App() {
               <Box display="flex" justifyContent="space-around" width="100%">
                 {/* Adjust justifyContent to space-around for equal spacing */}
                 <NavLink
-                  to="/"
-                  className={({ isActive }) =>
-                    cn("navigation__link", {
-                      "navigation__link--active": isActive,
-                    })
-                  }
-                  style={{ textAlign: "center", flex: 1 }}
-                >
-                  <IconButton
-                    color="inherit"
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                    }}
-                  >
-                    <DeleteIcon />
-                    <Typography variant="body2">Списання</Typography>
-                  </IconButton>
-                </NavLink>
-
-                <NavLink
-                  to="/complete"
-                  className={({ isActive }) =>
-                    cn("navigation__link", {
-                      "navigation__link--active": isActive,
-                    })
-                  }
-                  style={{ textAlign: "center", flex: 1 }}
-                >
-                  <IconButton
-                    color="inherit"
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                    }}
-                  >
-                    <DeleteForeverIcon />
-                    <Typography variant="body2">Закриття</Typography>
-                  </IconButton>
-                </NavLink>
-                <NavLink
                   to="/fortune-wheel"
                   className={({ isActive }) =>
                     cn("navigation__link", {
@@ -134,28 +83,6 @@ function App() {
                 </NavLink>
 
                 <NavLink
-                  to="/drinks"
-                  className={({ isActive }) =>
-                    cn("navigation__link", {
-                      "navigation__link--active": isActive,
-                    })
-                  }
-                  style={{ textAlign: "center", flex: 1 }}
-                >
-                  <IconButton
-                    color="inherit"
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                    }}
-                  >
-                    <CoffeeIcon />
-                    <Typography variant="body2">Напої</Typography>
-                  </IconButton>
-                </NavLink>
-
-                <NavLink
                   to="/settings"
                   className={({ isActive }) =>
                     cn("navigation__link", {
@@ -173,7 +100,7 @@ function App() {
                     }}
                   >
                     <SettingsIcon />
-                    <Typography variant="body2">Settings</Typography>
+                    <Typography variant="body2">Налаштування</Typography>
                   </IconButton>
                 </NavLink>
                 <NavLink

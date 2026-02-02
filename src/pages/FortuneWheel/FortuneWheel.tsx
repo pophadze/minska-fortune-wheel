@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { GOOGLE_API_KEY, GOOGLE_SHEET_ID } from "../../static-data/constants";
 import Confetti from "react-confetti";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { useNavigate } from "react-router-dom";
 
 const firebase = initializeApp(firebaseConfig);
 const database = getDatabase(firebase);
@@ -34,10 +34,22 @@ const FortuneWheel: FC<FortuneWheelProps> = ({ onSpinComplete }) => {
   const [winningPrize, setWinningPrize] = useState<Prize | null>(null);
   const [showWinDialog, setShowWinDialog] = useState<boolean>(false);
   const [sliderValue, setSliderValue] = useState<number>(0);
-  const [isSliding, setIsSliding] = useState<boolean>(false); // Track if the slider is being dragged
-  const navigate = useNavigate(); // Hook for navigation
+  const [isSliding, setIsSliding] = useState<boolean>(false);
+  const navigate = useNavigate();
 
-  
+  // Disable scrolling when component mounts
+  useEffect(() => {
+    // Prevent scrolling on mount
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    // Re-enable scrolling on unmount
+    return () => {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    };
+  }, []);
+
   useEffect(() => {
     const loadPrizes = async () => {
       try {
@@ -45,12 +57,12 @@ const FortuneWheel: FC<FortuneWheelProps> = ({ onSpinComplete }) => {
         setError(null);
         const { prizes: fetchedPrizes } = await fetchPrizeData(
           GOOGLE_SHEET_ID,
-          GOOGLE_API_KEY
+          GOOGLE_API_KEY,
         );
         setPrizes(fetchedPrizes);
       } catch (error) {
         setError(
-          error instanceof Error ? error.message : "Failed to load prizes"
+          error instanceof Error ? error.message : "Failed to load prizes",
         );
       } finally {
         setIsLoading(false);
@@ -61,17 +73,17 @@ const FortuneWheel: FC<FortuneWheelProps> = ({ onSpinComplete }) => {
   }, []);
 
   const selectPrizeByChance = (prizes: Prize[]): Prize => {
-    const random = Math.random() * 100; // Random number between 0 and 100
+    const random = Math.random() * 100;
     let sum = 0;
 
     for (const prize of prizes) {
-      sum += prize.chance || 0; // Add the chance, defaulting to 0 if undefined
+      sum += prize.chance || 0;
       if (random <= sum) {
         return prize;
       }
     }
 
-    return prizes[prizes.length - 1]; // Fallback to last prize
+    return prizes[prizes.length - 1];
   };
 
   const savePrizeToFirebase = async (prize: Prize) => {
@@ -102,19 +114,18 @@ const FortuneWheel: FC<FortuneWheelProps> = ({ onSpinComplete }) => {
   const handleSliderChange = (event: Event, newValue: number | number[]) => {
     console.log(event);
     setSliderValue(newValue as number);
-    setIsSliding(true); // Start sliding
+    setIsSliding(true);
   };
 
   const handleSliderRelease = () => {
     if (sliderValue >= 90) {
       spinWheel();
     } else {
-      // Reset the slider and wheel position
       setSliderValue(0);
-      setRotation((prev) => prev - 10); // Slight backward rotation
-      setTimeout(() => setRotation((prev) => prev + 10), 100); // Slight forward rotation
+      setRotation((prev) => prev - 10);
+      setTimeout(() => setRotation((prev) => prev + 10), 100);
     }
-    setIsSliding(false); // Stop sliding
+    setIsSliding(false);
   };
 
   const spinWheel = () => {
@@ -122,13 +133,8 @@ const FortuneWheel: FC<FortuneWheelProps> = ({ onSpinComplete }) => {
 
     setIsSpinning(true);
 
-    // Select the winning prize based on chances
     const selectedPrize = selectPrizeByChance(prizes);
-
-    // Find the index of the selected prize
     const prizeIndex = prizes.findIndex((p) => p === selectedPrize);
-
-    // Calculate the rotation to land on the selected prize
     const spins = 5;
     const sectionSize = 360 / prizes.length;
     const targetRotation = 360 - (prizeIndex * sectionSize + sectionSize / 2);
@@ -183,11 +189,11 @@ const FortuneWheel: FC<FortuneWheelProps> = ({ onSpinComplete }) => {
             x={textX}
             y={textY}
             fill="white"
-            fontSize="14"
+            fontSize="11"
             fontWeight="bold"
             textAnchor="middle"
             dominantBaseline="middle"
-            transform={`rotate(${textAngle + 90}, ${textX}, ${textY})`} // Rotate text vertically
+            transform={`rotate(${textAngle + 90}, ${textX}, ${textY})`}
             className="text-shadow"
           >
             {prize.text}
@@ -216,16 +222,16 @@ const FortuneWheel: FC<FortuneWheelProps> = ({ onSpinComplete }) => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-b from-blue-100 to-purple-100">
+    <div className="fixed inset-0 flex flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-blue-100 to-purple-100">
       <Dialog
         open={showUsernameDialog}
         onClose={() => setShowUsernameDialog(false)}
       >
         <DialogContent>
-          <DialogTitle>Введіть ваше ім'я</DialogTitle>
+          <DialogTitle>Введіть ваше прізвище</DialogTitle>
           <div className="space-y-4">
             <TextField
-              placeholder="Ім'я"
+              placeholder="Прізвище"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && handleUsernameSubmit()}
@@ -271,14 +277,15 @@ const FortuneWheel: FC<FortuneWheelProps> = ({ onSpinComplete }) => {
             </Button>
           </div>
         </DialogContent>
-        <Confetti /> {/* Confetti animation */}
+        <Confetti />
       </Dialog>
 
-      <div className="w-full max-w-md mx-auto">
-        <div className="relative mb-8 aspect-square">
+      <div className="flex flex-col items-center justify-center w-full h-full gap-8 px-4">
+        {/* Wheel container - optimized for tablets */}
+        <div className="relative w-full max-w-2xl aspect-square">
           <div className="absolute top-0 z-10 -translate-x-1/2 -translate-y-1/2 left-1/2">
-            <div className="p-3 bg-white rounded-full shadow-lg">
-              <ArrowDown size={32} className="text-gray-800" />
+            <div className="p-4 bg-white rounded-full shadow-lg">
+              <ArrowDown size={40} className="text-gray-800" />
             </div>
           </div>
 
@@ -290,37 +297,36 @@ const FortuneWheel: FC<FortuneWheelProps> = ({ onSpinComplete }) => {
               transition: isSpinning
                 ? "transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99)"
                 : isSliding
-                ? "transform 0.1s ease-out"
-                : "none",
+                  ? "transform 0.1s ease-out"
+                  : "none",
             }}
           >
             {getWheelSections()}
           </svg>
         </div>
 
-        <div className="flex justify-center">
-          <div className="w-[300px]">
-            <Slider
-              value={sliderValue}
-              onChange={handleSliderChange}
-              onChangeCommitted={handleSliderRelease}
-              aria-labelledby="slider"
-              min={0}
-              max={100}
-              sx={{
-                color: "#3f51b5",
-                height: 8,
-                "& .MuiSlider-thumb": {
-                  width: 24,
-                  height: 24,
-                  backgroundColor: "#fff",
-                  border: "2px solid currentColor",
-                },
-              }}
-            />
-            <div className="mt-2 text-sm text-center text-gray-600">
-              Тягніть щоб крутити
-            </div>
+        {/* Slider controls */}
+        <div className="w-full max-w-md px-4">
+          <Slider
+            value={sliderValue}
+            onChange={handleSliderChange}
+            onChangeCommitted={handleSliderRelease}
+            aria-labelledby="slider"
+            min={0}
+            max={100}
+            sx={{
+              color: "#3f51b5",
+              height: 10,
+              "& .MuiSlider-thumb": {
+                width: 32,
+                height: 32,
+                backgroundColor: "#fff",
+                border: "2px solid currentColor",
+              },
+            }}
+          />
+          <div className="mt-3 text-base font-medium text-center text-gray-700">
+            Тягніть щоб крутити
           </div>
         </div>
       </div>

@@ -21,7 +21,7 @@ import {
   DialogActions,
   Alert,
 } from "@mui/material";
-import { firebaseConfig } from "../firebaseConfig";
+import { firebaseConfig } from "../../firebaseConfig";
 
 const firebase = initializeApp(firebaseConfig);
 const database = getDatabase(firebase);
@@ -67,12 +67,12 @@ const PrizeResults = () => {
   const filteredResults = results.filter(
     (result) =>
       result.username.toLowerCase().includes(usernameFilter.toLowerCase()) &&
-      result.prize.toLowerCase().includes(prizeFilter.toLowerCase())
+      result.prize.toLowerCase().includes(prizeFilter.toLowerCase()),
   );
 
   const paginatedResults = filteredResults.slice(
     (page - 1) * rowsPerPage,
-    page * rowsPerPage
+    page * rowsPerPage,
   );
 
   const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
@@ -83,7 +83,7 @@ const PrizeResults = () => {
     setSelectedIds((prev) =>
       prev.includes(id)
         ? prev.filter((selectedId) => selectedId !== id)
-        : [...prev, id]
+        : [...prev, id],
     );
   };
 
