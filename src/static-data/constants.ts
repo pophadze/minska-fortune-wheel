@@ -55,7 +55,7 @@ export const CATEGORIES: Category[] = [
 
 export const NUMERIC_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
 export const RW_CATEGORY_ID = 6;
-export const GOOGLE_SHEET_ID = "1QqVBJKQIz5nJ0k3_JoAsX6p0m3S1I3lreyHmNfClbDY";
+export const GOOGLE_SHEET_ID = "1AK7S-2dIbjo5Um0dyNin-q9XN74djWHExzhOjWFmY7c";
 export const GOOGLE_SHEET_SELECTION_RANGE = "!A1:B40";
 export const GOOGLE_API_KEY = "AIzaSyDTXQTVuGPg-KXcc1EXXWr7Bmyin-CRaD8";
 export const MNG_PASSWORD = "4444";
