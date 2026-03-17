@@ -63,7 +63,7 @@ const Settings: React.FC = () => {
             {loading ? (
               <CircularProgress size={24} />
             ) : (
-              "Оновити призи"
+              "Оновити продукти та призи"
             )}
           </Button>
           {successMessage && (
